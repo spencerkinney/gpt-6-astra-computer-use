@@ -1,0 +1,4 @@
+openai>=3.31.0
+requests>=2.32
+rich>=13.7
+python-dotenv>=1.0
