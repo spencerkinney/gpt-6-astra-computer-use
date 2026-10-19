@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🖥️ GPT Computer Use, in one file
+# 🖥️ GPT-6 Astra Computer Use, in one file
 
 **Give GPT a real Linux desktop and watch it work.**
 Run the desktop locally with Docker, or in the cloud with [Orgo](https://orgo.ai) with nothing to install.
@@ -9,13 +9,30 @@ Run the desktop locally with Docker, or in the cloud with [Orgo](https://orgo.ai
 [Orgo docs](https://docs.orgo.ai) ·
 [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra)
 
-<img src="assets/demo.gif" width="720" alt="GPT-6 Astra searching for a funny cat photo in Firefox and saving it with right-click, Save Image As">
+<a href="https://www.youtube.com/watch?v=q3GFjaPOaMI">
+  <img src="https://img.youtube.com/vi/q3GFjaPOaMI/maxresdefault.jpg" width="720" alt="Watch the video: GPT-6 Astra Computer Use, Developer Setup Guide (Local + Cloud)">
+</a>
 
-<sub><i>Real run: "find a picture of a real, funny cat and save it to the Desktop", 7 steps with <code>--fast</code></i></sub>
+<sub>▶️ <b><a href="https://www.youtube.com/watch?v=q3GFjaPOaMI">Watch the 33-minute walkthrough on YouTube</a></b>: from the docs to a working agent, locally and in the cloud</sub>
 
 <sub>Prefer Claude? Same tutorial for Claude Opus 5.5: <a href="https://github.com/spencerkinney/opus-5-5-computer-use">opus-5-5-computer-use</a></sub>
 
 </div>
+
+<details>
+<summary><b>Video chapters</b></summary>
+
+| Time | Chapter |
+| --- | --- |
+| [00:00](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=0s) | Introduction & OpenAI documentation |
+| [03:30](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=210s) | Basic code setup in Cursor |
+| [11:30](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=690s) | Running the code example in Claude Code |
+| [13:00](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=780s) | Running a local virtual computer (Docker) |
+| [20:30](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=1230s) | Testing the Astra computer use loop |
+| [24:00](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=1440s) | Testing hosted computer use with Orgo |
+| [33:00](https://www.youtube.com/watch?v=q3GFjaPOaMI&t=1980s) | Wrap up |
+
+</details>
 
 ---
 
@@ -36,6 +53,11 @@ Run the desktop locally with Docker, or in the cloud with [Orgo](https://orgo.ai
 ```
 
 The model looks at a screenshot and replies with actions such as `click`, `type`, `scroll` or `keypress`. `cua.py` runs those actions on the desktop, sends back a fresh screenshot, and repeats until the task is done. Everything is in [one small file](cua.py).
+
+<p align="center">
+  <img src="assets/demo.gif" width="720" alt="GPT-6 Astra searching for a funny cat photo in Firefox and saving it with right-click, Save Image As"><br>
+  <sub><i>Real run: "find a picture of a real, funny cat and save it to the Desktop", 7 steps with <code>--fast</code></i></sub>
+</p>
 
 ### Three ways to run
 
@@ -79,7 +101,7 @@ Then use `python cua.py ...` exactly as below. Docker Desktop for Windows works 
 | `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys): click **Create new secret key**. It starts with `sk-`. | Local and `--orgo` |
 | `ORGO_API_KEY` | Sign up at [orgo.ai/start](https://www.orgo.ai/start), then go to [Settings → Credentials](https://www.orgo.ai/settings/credentials). It starts with `sk_live_`. | `--orgo` and `--orgo-agent` |
 
-Your OpenAI project needs access to a model that supports the [computer tool](https://developers.openai.com/api/docs/models/gpt-6-astra), plus billing set up. Each run costs a little, because every step sends a screenshot.
+Your OpenAI project needs billing set up and access to a model that supports the [computer tool](https://developers.openai.com/api/docs/guides/tools-computer-use). The default is `gpt-6-astra`. OpenAI's own computer tool examples use `gpt-6.1-sol`, and you can switch with `--model gpt-6.1-sol`. Each run costs a little, because every step sends a screenshot.
 
 **3. Put the keys in `.env`**
 
@@ -147,8 +169,8 @@ Every screenshot is saved to `runs/<timestamp>/` so you can replay what the mode
 ### Try these
 
 ```bash
-python cua.py "Using only Firefox (no terminal), find a funny cat picture and save it to the Desktop" --fast
-python cua.py "Open Firefox, go to news.ycombinator.com and tell me the top 3 stories"
+python cua.py "Using only the web browser (no terminal), find a funny cat picture and save it to the Desktop" --fast
+python cua.py "Open the web browser, go to news.ycombinator.com and tell me the top 3 stories"
 python cua.py "Open a terminal, write a Python script that prints the first 10 primes, and run it"
 python cua.py "Open the file manager and create a folder called hello-world on the desktop"
 ```
@@ -260,6 +282,8 @@ Read OpenAI's [Run safely](https://developers.openai.com/api/docs/guides/tools-c
 | `401` / `Incorrect API key` | The key is wrong or was revoked. Create a new one. |
 | `model_not_found` / no access | Your project can't use that model. Try `--model gpt-6.1-sol`, or check [your project's model access](https://platform.openai.com/settings). |
 | `Orgo API error` about plan, billing or capacity on `--orgo` | Probably no paid Orgo plan. Add `ORGO_BILLING_MODE=hourly` to `.env` to run on your free credit. |
+| `Orgo API error 402` … `insufficient_credit` | Your Orgo credit has run out. Top up in the [Orgo dashboard](https://www.orgo.ai). |
+| `503` … `model_not_configured` on `--orgo-agent` | Orgo's GPT-6 Astra agent is briefly unavailable. Try again in a minute. |
 | Viewer shows "Disconnected" | Reload the viewer tab. noVNC drops its connection when the container restarts. |
 | Clicks land in the wrong place | Don't resize the desktop. Screenshots are sent at full size so the model's coordinates match the screen. |
 
@@ -268,6 +292,9 @@ Read OpenAI's [Run safely](https://developers.openai.com/api/docs/guides/tools-c
 Point it at [`AGENTS.md`](AGENTS.md). That file has the exact setup commands, where the keys go, and how to verify a run. Claude Code picks it up automatically through `CLAUDE.md`.
 
 ## Resources
+
+**Video**
+- [GPT-6 Astra Computer Use: Developer Setup Guide (Local + Cloud)](https://www.youtube.com/watch?v=q3GFjaPOaMI): the full walkthrough of this repo
 
 **OpenAI**
 - [Computer use guide](https://developers.openai.com/api/docs/guides/tools-computer-use): overview, the computer tool, the SDK helpers
@@ -283,6 +310,9 @@ Point it at [`AGENTS.md`](AGENTS.md). That file has the exact setup commands, wh
 - [Orgo hosted agent (chat completions)](https://docs.orgo.ai/api-reference/chat/completions)
 - [API reference](https://docs.orgo.ai/api-reference/introduction)
 - [Get an API key](https://www.orgo.ai/start) · [Pricing](https://orgo.ai/pricing)
+
+**Benchmarks**
+- [OSWorld v2](https://osworld-v2.xlang.ai/): about 200 realistic computer tasks (creative apps, the browser, the terminal, games), with a leaderboard of how each model does
 
 ## License
 

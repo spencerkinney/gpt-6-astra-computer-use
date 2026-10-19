@@ -58,12 +58,14 @@ Rules for agents:
 
 - Keep `cua.py` small (about 275 lines today), single-file and dependency-light (`openai`, `requests`, `rich`, `python-dotenv`).
 - A backend is any class with `watch_url`, `screenshot() -> bytes` (PNG), `act(action)` and `close()`.
+- The default model is `gpt-6-astra`. OpenAI's own computer tool examples use `gpt-6.1-sol` (`--model gpt-6.1-sol`). Both use the same `computer` tool, so no code changes are needed.
 - Send screenshots at full resolution with `"detail": "original"`. The model's coordinates are in screenshot pixels.
 - If a `computer_call` has `pending_safety_checks`, a human must approve. Never auto-acknowledge them.
 - Clean up: `docker compose down` for local runs. Orgo computers are deleted automatically unless you pass `--keep`.
 
 ## Docs
 
+- Video walkthrough of this repo: https://www.youtube.com/watch?v=q3GFjaPOaMI
 - OpenAI computer use: https://developers.openai.com/api/docs/guides/tools-computer-use
 - OpenAI integration recipes: https://developers.openai.com/api/docs/guides/tools-computer-use-integration
 - Orgo + OpenAI: https://docs.orgo.ai/guides/openai-computer-use
